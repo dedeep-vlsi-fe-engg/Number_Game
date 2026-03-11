@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Number Guessing Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 50px 60px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .emoji { font-size: 64px; display: block; margin-bottom: 16px; }
+
+        h1 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.5);
+            font-size: 15px;
+            margin-bottom: 36px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        input[type="number"] {
+            padding: 14px 18px;
+            font-size: 22px;
+            width: 110px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #e94560;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button { opacity: 0.5; }
+
+        button {
+            padding: 14px 28px;
+            font-size: 17px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e94560, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.5);
+        }
+
+        button:active { transform: translateY(0); }
+
+        .message {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 16px 24px;
+            border-radius: 12px;
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message.win {
+            background: rgba(46, 213, 115, 0.15);
+            color: #2ed573;
+            border: 1px solid rgba(46, 213, 115, 0.3);
+        }
+
+        .message.hint {
+            background: rgba(255, 165, 0, 0.1);
+            color: #ffa502;
+            border: 1px solid rgba(255, 165, 0, 0.2);
+        }
+
+        .message.empty {
+            color: rgba(255,255,255,0.3);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .play-again {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 24px;
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .play-again:hover { background: rgba(255,255,255,0.2); }
+
+        .range-hint {
+            margin-top: 24px;
+            color: rgba(255,255,255,0.25);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <span class="emoji">🎯</span>
+        <h1>Guess the Number</h1>
+        <p class="subtitle">I'm thinking of a number between <strong style="color:#e94560">1</strong> and <strong style="color:#e94560">100</strong></p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-row">
+                <input type="number" name="guess" min="1" max="100" placeholder="?" required autofocus />
+                <button type="submit">Guess! 🚀</button>
+            </div>
+        </form>
+
+        {% if message %}
+            <div class="message {% if won %}win{% else %}hint{% endif %}">
+                {{ message }}
+            </div>
+            {% if won %}
+                <a href="/" class="play-again">🔄 Play Again</a>
+            {% endif %}
+        {% else %}
+            <div class="message empty">Your hint will appear here...</div>
+        {% endif %}
+
+        <p class="range-hint">↑ higher &nbsp;|&nbsp; ↓ lower &nbsp;|&nbsp; 🎉 exact</p>
+    </div>
+</body>
+</html>
